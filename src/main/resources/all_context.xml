@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+	>
+
+
+
+	<import resource="t1000_context.xml" />
+
+	<bean id="t1000Conveyor" class="ru.javabegin.training.spring.impls.conveyor.T1000Conveyor">
+		<lookup-method name="createRobot" bean="t1000"/>
+	</bean>
+
+	<!--<bean id="t1000Pool" class="ru.javabegin.training.spring.impls.pool.T1000Pool">
+		<constructor-arg name="robotMap">
+			<map>
+				<entry key="2010" value-ref="t1000"/>
+				<entry key="2011" value-ref="t1000"/>
+				<entry key="2012">
+					<bean class="ru.javabegin.training.spring.impls.robot.ModelT1000" parent="baseModel">
+						<constructor-arg value="green"/>
+						<constructor-arg value="2012"/>
+						<constructor-arg value="false"/>
+					</bean>
+
+				</entry>
+			</map>
+		</constructor-arg>
+
+	</bean>-->
+
+	<bean id="t1000Pool" class="ru.javabegin.training.spring.impls.pool.T1000Pool">
+		<property name="robotCollection">
+			<list>
+				<ref bean="t1000"/>
+				<bean class="ru.javabegin.training.spring.impls.robot.ModelT1000" parent="baseModel">
+					<constructor-arg value="green"/>
+					<constructor-arg value="2000"/>
+					<constructor-arg value="true"/>
+				</bean>
+
+			</list>
+		</property>
+	</bean>
+
+	<!--  ****************************  USING SpEL **************************** -->
+
+	<bean id="t1000GreenPool" class="ru.javabegin.training.spring.impls.pool.T1000Pool">
+		<constructor-arg name="robotCollection" value="#{t1000Pool.robotCollection.?[color.toUpperCase() eq 'GREEN']}"/>
+
+	</bean>
+
+
+
+	
+	<bean class="ru.javabegin.training.spring.main.MyBeanPostProcessor"/>
+
+
+</beans>
